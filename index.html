@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Demostración – Atención en acción</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Raleway:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#05052e;--bg2:#1a1060;--bg3:#3a1f7a;--ink:#fff;--mute:#b9b6e6;--panel:rgba(20,18,70,.72);--cyan:#2fe0d0;--pink:#ff5cc8;--mark:#e6ff2e;--orange:#ffa31a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:Raleway,system-ui,sans-serif;background:radial-gradient(900px 500px at 85% 10%,var(--bg3),transparent 70%),radial-gradient(700px 500px at 5% 90%,#0d3a8f55,transparent 70%),linear-gradient(160deg,var(--bg1),var(--bg2) 60%,#0a0640)}
+main{max-width:1000px;margin:0 auto;padding:26px 18px 48px}
+h1{font-family:Syne,sans-serif;font-weight:800;font-size:clamp(26px,5vw,40px);margin:0 0 6px}
+.sub{color:var(--mute);margin:0 0 20px;font-weight:600}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.row button,summary{font:inherit;font-weight:700;color:var(--ink);background:var(--panel);border:1px solid #ffffff33;border-radius:6px;padding:9px 14px;cursor:pointer}
+.row button[aria-pressed=true]{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan) inset}
+.row .next{margin-left:auto;background:var(--cyan);color:#05052e;border-color:var(--cyan)}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.stage{background:var(--panel);border:1px solid #ffffff22;border-radius:10px;padding:24px 14px 20px}
+.sentence{display:flex;flex-wrap:wrap;gap:6px 8px;justify-content:center;margin:4px 0 22px}
+.w{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:64px}
+.w button{font-family:Syne,sans-serif;font-weight:700;font-size:var(--fs,34px);color:var(--ink);background:transparent;border:0;border-bottom:3px solid transparent;padding:2px 8px;cursor:pointer;position:relative;isolation:isolate;border-radius:3px}
+.w button .m{position:absolute;inset:6px 0 4px;background:var(--mark);border-radius:3px;opacity:0;z-index:-1;transition:opacity .35s}
+.w button[aria-current=true]{border-bottom-color:var(--pink)}
+.w button[aria-current=true]:not(:has(.m[style])){background:#ff5cc822}
+.w .pct{font-weight:700;font-size:17px;min-height:22px;color:var(--mark)}
+.w .bar{width:100%;height:6px;background:#ffffff1f;border-radius:3px;overflow:hidden}
+.w .bar i{display:block;height:100%;width:0;background:var(--mark);transition:width .35s}
+.w .sc{font-size:12px;color:var(--mute);min-height:16px}
+.say{background:#0b0a4a;border-left:4px solid var(--cyan);padding:14px 16px;border-radius:4px;font-weight:600;line-height:1.55;max-width:75ch;margin:0 auto}
+.grid{display:grid;grid-template-columns:1fr 1.4fr;gap:16px;margin-top:16px}
+.grid.one{grid-template-columns:1fr}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid #ffffff22;border-radius:10px;padding:16px}
+.card h2{font-family:Syne,sans-serif;font-size:18px;margin:0 0 12px}
+.qkv div{background:#25234f;border-radius:4px;padding:8px 12px;margin-bottom:8px;font-weight:600}
+.qkv b{display:block;font-size:16px}
+.qkv .on{outline:2px solid var(--pink)}
+.tbl{overflow-x:auto}
+table{border-collapse:separate;border-spacing:3px;width:100%;min-width:300px;text-align:center;font-weight:700;font-size:var(--tf,15px)}
+th{font-size:12px;color:var(--mute);font-weight:600;padding:4px 2px}
+td{padding:9px 2px;border-radius:3px}
+tr.sel td{box-shadow:0 -2px 0 var(--orange),0 2px 0 var(--orange)}
+tr.sel td.rl{box-shadow:none}
+td.rl{text-align:right;font-size:12px;color:var(--mute);font-weight:600;padding-right:8px;cursor:pointer;white-space:nowrap}
+tr.sel td.rl{color:var(--orange)}
+.hint{color:var(--mute);font-size:14px;margin:10px 0 0;text-align:center}
+details{margin-top:16px}
+summary{display:inline-block;list-style:none}
+.notes{background:var(--panel);border:1px dashed var(--orange);border-radius:8px;padding:14px 16px;margin-top:10px;line-height:1.6;font-weight:600}
+.notes p{margin:0 0 8px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Demostración: la atención en acción</h1>
+  <p class="sub">Elige un ejemplo, toca una palabra y avanza con el botón o con las flechas ← →.</p>
+
+  <div class="row" id="exs" role="group" aria-label="Ejemplo"></div>
+  <div class="row" role="group" aria-label="Pasos" id="steps">
+    <button data-s="1">Paso 1 · La palabra pregunta</button>
+    <button data-s="2">Paso 2 · Se comparan</button>
+    <button data-s="3">Paso 3 · Se resalta</button>
+    <button class="next" id="next">Siguiente ▶</button>
+  </div>
+
+  <section class="stage">
+    <div class="sentence" id="sentence"></div>
+    <p class="say" id="say" aria-live="polite"></p>
+  </section>
+
+  <div class="grid" id="grid">
+    <section class="card qkv">
+      <h2>Qué hace la palabra elegida</h2>
+      <div id="q"></div><div id="k"></div><div id="v"></div>
+    </section>
+    <section class="card">
+      <h2>Mapa de atención completo</h2>
+      <div class="tbl"><table id="tbl"></table></div>
+      <p class="hint">Cada fila suma 100 %. Toca una fila para cambiar de palabra.</p>
+    </section>
+  </div>
+
+  <details>
+    <summary>🎤 Notas para quien expone</summary>
+    <div class="notes" id="notes"></div>
+  </details>
+</main>
+
+<script>
+var EX=[
+{name:"Ejemplo 1 · El perro está ladrando",sel:1,fs:34,tf:15,
+ w:["El","Perro","Está","Ladrando"],
+ a:[[40,40,8,12],[20,15,10,55],[5,30,25,40],[8,47,10,35]],
+ n:["“El” mira a “El” y a “Perro”: necesita saber a qué sustantivo acompaña.",
+    "“Perro” da más peso a “Ladrando”: así entiende que es un perro que ladra, no cualquier perro.",
+    "“Está” se fija en “Ladrando” y en “Perro”: conecta el verbo con quién hace la acción.",
+    "“Ladrando” busca sobre todo a “Perro”: necesita saber quién está ladrando."]},
+{name:"Ejemplo 2 · ¿Quién estaba cansado?",sel:7,fs:24,tf:12,
+ w:["El","perro","no","cruzó","la","calle","porque","estaba","cansado"],
+ a:[[15,70,3,3,2,2,2,1,2],[10,20,5,35,2,10,3,5,10],[2,15,15,60,2,2,2,1,1],[3,35,25,12,5,10,5,2,3],[1,2,2,5,10,75,2,1,2],[2,10,2,25,40,12,3,3,3],[2,8,15,30,2,8,10,10,15],[3,52,3,5,2,3,8,9,15],[2,50,3,5,2,3,10,15,10]],
+ n:["“El” se fija en “perro” (70 %): es el sustantivo al que acompaña.",
+    "“perro” mira a “cruzó” (35 %): quiere saber qué hizo.",
+    "“no” se pega a “cruzó” (60 %): niega ese verbo.",
+    "“cruzó” busca quién cruza (“perro”, 35 %) y la negación “no” (25 %).",
+    "“la” va directo a “calle” (75 %): es su artículo.",
+    "“calle” mira a “la” (40 %) y a “cruzó” (25 %): qué se cruza.",
+    "“porque” une la causa con la acción: mira a “cruzó” (30 %) y a “cansado” (15 %).",
+    "“estaba” se fija en “perro” (52 %) y casi nada en “calle” (3 %): ya sabe quién estaba cansado. Aquí se ve el contexto global: la pista está 6 palabras atrás.",
+    "“cansado” también mira a “perro” (50 %): el cansancio es del perro, no de la calle."]}
+];
+var ex=0,sel=1,step=1;
+var $=function(i){return document.getElementById(i)};
+var all=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+
+function setEx(i){ex=i;sel=EX[i].sel;step=1;build();render()}
+function build(){
+  $("exs").innerHTML="";
+  EX.forEach(function(e,i){var b=document.createElement("button");b.textContent=e.name;b.setAttribute("aria-pressed",i===ex);b.onclick=function(){setEx(i)};$("exs").appendChild(b)});
+  $("grid").className="grid"+(ex===1?" one":"");
+  document.documentElement.style.setProperty("--fs",EX[ex].fs+"px");
+  document.documentElement.style.setProperty("--tf",EX[ex].tf+"px");
+}
+function go(s){step=Math.max(1,Math.min(3,s));render()}
+
+function render(){
+  var E=EX[ex],row=E.a[sel],name=E.w[sel],mx=Math.max.apply(null,row);
+  var s=$("sentence");s.innerHTML="";
+  E.w.forEach(function(w,i){
+    var d=document.createElement("div");d.className="w";
+    var b=document.createElement("button");b.innerHTML='<span class="m"></span>'+w;
+    if(i===sel)b.setAttribute("aria-current","true");
+    b.onclick=function(){sel=i;render()};
+    var sc=document.createElement("div");sc.className="sc";
+    var bar=document.createElement("div");bar.className="bar";bar.innerHTML="<i></i>";
+    var p=document.createElement("div");p.className="pct";
+    if(step>=2)sc.textContent="puntaje "+Math.log(row[i]).toFixed(2);
+    if(step===3){
+      var m=b.querySelector(".m");m.style.opacity=(0.1+row[i]/mx*0.9).toFixed(2);
+      if(row[i]/mx>0.55)b.style.color="#05052e";
+      bar.firstChild.style.width=(row[i]/mx*100)+"%";p.textContent=row[i]+"%";
+    }
+    d.appendChild(b);d.appendChild(sc);d.appendChild(bar);d.appendChild(p);s.appendChild(d);
+  });
+  var msg;
+  if(step===1)msg="“"+name+"” se pregunta: ¿qué otras palabras de la frase me ayudan a entender mi significado aquí? Esa pregunta es su Query.";
+  else if(step===2)msg="Cada palabra responde con su Key (qué ofrece). Se compara con la Query de “"+name+"” y sale un puntaje: más alto = más relacionada.";
+  else msg="Softmax convierte los puntajes en porcentajes que suman 100 %. "+E.n[sel]+" Más amarillo = más atención.";
+  $("say").textContent=msg;
+  $("q").className=step===1?"on":"";$("k").className=step===2?"on":"";$("v").className=step===3?"on":"";
+  $("q").innerHTML="<b>Query de “"+name+"”</b>Qué busco";
+  $("k").innerHTML="<b>Key de cada palabra</b>Qué encuentro";
+  $("v").innerHTML="<b>Value de cada palabra</b>Qué aporta (se mezcla según el %)";
+  all("#steps button[data-s]").forEach(function(b){b.setAttribute("aria-pressed",+b.getAttribute("data-s")===step)});
+  $("next").textContent=step<3?"Siguiente ▶":"Reiniciar ↺";
+  var h="<tr><th></th>"+E.w.map(function(w){return"<th>"+w+"</th>"}).join("")+"</tr>";
+  E.a.forEach(function(r,i){
+    h+='<tr class="'+(i===sel?"sel":"")+'" data-i="'+i+'"><td class="rl">'+E.w[i]+"</td>"+r.map(function(v){
+      return'<td style="background:rgba(80,70,220,'+(0.2+v/100*0.8).toFixed(2)+')">'+v+"%</td>"}).join("")+"</tr>";
+  });
+  $("tbl").innerHTML=h;
+  all("#tbl tr[data-i]").forEach(function(tr){tr.onclick=function(){sel=+tr.getAttribute("data-i");render()}});
+  var N=[
+   "<p><b>Qué decir:</b> “Cada palabra hace una pregunta. Aquí <b>"+name+"</b> pregunta: ¿quién de esta frase me ayuda a entenderme?” Señala la palabra marcada en rosa.</p><p><b>Evita:</b> hablar de matrices todavía. Solo la idea de pregunta.</p>",
+   "<p><b>Qué decir:</b> “Las demás palabras responden con su Key. Mientras más se parezcan la pregunta y la respuesta, más alto el puntaje.”</p><p><b>Si preguntan de dónde sale el puntaje:</b> es el producto punto entre la Query y cada Key.</p>",
+   "<p><b>Qué decir:</b> “Softmax lo convierte en porcentajes. Es el marcador fluorescente: lo más amarillo es lo que más importa.” Luego cambia de palabra para mostrar que cada una reparte su atención distinto.</p><p><b>Cierre:</b> esto pasa a la vez para todas las palabras, por eso el Transformer entiende el contexto global y es rápido de entrenar.</p>"];
+  $("notes").innerHTML=N[step-1];
+}
+all("#steps button[data-s]").forEach(function(b){b.onclick=function(){go(+b.getAttribute("data-s"))}});
+$("next").onclick=function(){go(step===3?1:step+1)};
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight")go(step+1);else if(e.key==="ArrowLeft")go(step-1);
+});
+setEx(0);
+</script>
+</body>
+</html>
