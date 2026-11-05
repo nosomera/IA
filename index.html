@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Raleway:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
+
 :root{--bg1:#05052e;--bg2:#1a1060;--bg3:#3a1f7a;--ink:#fff;--mute:#b9b6e6;--panel:rgba(20,18,70,.72);--cyan:#2fe0d0;--pink:#ff5cc8;--mark:#e6ff2e;--orange:#ffa31a;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -223,7 +224,7 @@ function update(){
    "<p><b>Qué decir:</b> “Las demás responden con su Key. Mientras más se parezcan la pregunta y la respuesta, más alto el puntaje.” Señala las bolitas que viajan.</p><p><b>Si preguntan de dónde sale el puntaje:</b> es el producto punto entre la Query y cada Key.</p>",
    "<p><b>Qué decir:</b> “Softmax lo convierte en porcentajes. Es el marcador fluorescente: lo más amarillo es lo que más importa.”</p><p><b>Truco:</b> cambia de palabra para mostrar que cada una reparte su atención distinto.</p>",
    "<p><b>Qué decir:</b> “Cada palabra aporta su Value según su porcentaje. La barra de abajo es el nuevo significado de la palabra.”</p><p><b>Cierre:</b> esto pasa a la vez para todas las palabras, por eso el Transformer entiende el contexto global y es rápido de entrenar.</p>"];
-  $("notes").innerHTML=N[step-1];
+
   arcs();
 }
 
